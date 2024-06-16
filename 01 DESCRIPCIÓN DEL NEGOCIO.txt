@@ -1,0 +1,3 @@
+BASE DE DATOS EMPRESA GESTION DE REPUESTOS FERREIROS
+
+Ferreiros es una empresa dedicada a la venta de repuestos de maquinaria pesada en el todo el Peru, en la siguiente base de datos, se resumen las tablas que dicha empresa maneja para el control de sus proveedores, clientes, productos y stock de repuestos.

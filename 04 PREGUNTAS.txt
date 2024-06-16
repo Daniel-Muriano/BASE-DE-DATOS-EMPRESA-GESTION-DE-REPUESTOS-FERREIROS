@@ -1,0 +1,12 @@
+PREGUNTAS DEL GRUPO 2
+
+PREGUNTA 01	¿Cuántos pedidos se han registrado en el año 2024?
+PREGUNTA 02	¿Qué producto ha vendido mas unidades en el año 2024?
+PREGUNTA 03	¿Qué categoría de producto ha sido la menos pedida en el año 2024?
+PREGUNTA 04	¿Cuál es el tiempo máximo que ha demorado un pedido en ser entregado (de estado Pendiente 1 a estado Entregado 7) en el 2024?
+PREGUNTA 05	¿Cuál ha sido el producto más caro pedido en el año 2024?
+PREGUNTA 06	¿Cuantos pedidos han sido entregados en el año 2024? (estado Entregado)
+PREGUNTA 07	¿Qué cuantos pedidos han sido cancelados en el año 2024? (estado Cancelado)
+PREGUNTA 08	¿Cuales son los 3 productos con menos unidades vendidas en 2024?
+PREGUNTA 09	¿Cual ha sido la importacion con mayor monto total (precio_unitario x cantidad) en el 2024?
+PREGUNTA 10	¿Cual ha sido el pedido con mayor  monto total (precio_unitario x cantidad)  en el 2024?

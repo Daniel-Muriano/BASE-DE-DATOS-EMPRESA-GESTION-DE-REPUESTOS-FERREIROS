@@ -1,31 +1,32 @@
 --Pregunta 01: ¿Cuántos pedidos se han registrado en el año 2024?
-SELECT COUNT(*) AS TotalPedidos2024
+SELECT YEAR(fecha_hora) as año, COUNT(*) AS cantidad
 FROM grupo02.pedidos
 WHERE YEAR(fecha_hora) = 2024
+GROUP BY YEAR(fecha_hora)
 
 						
 --Pregunta 02: ¿Qué producto ha vendido mas unidades en el año 2024?
 SELECT TOP 1
 p.id_producto,
 p.nombre,
-SUM(dp.cantidad) AS Unidades_Vendidas
+SUM(dp.cantidad) AS cantidad
 FROM [grupo02].[productos] p
 INNER JOIN [grupo02].[detalles_pedidos] dp ON p.id_producto = dp.id_producto
 INNER JOIN [grupo02].[pedidos] pp ON dp.id_pedido = pp.id_pedido
-WHERE pp.fecha_hora BETWEEN '2024-01-01' AND '2024-12-31'
+WHERE YEAR(pp.fecha_hora) = 2024
 GROUP BY 
 p.id_producto,
 p.nombre
 ORDER BY
-Unidades_Vendidas DESC
+cantidad DESC
 
 
 --Pregunta 03: ¿Qué categoría de producto ha sido la menos pedida en el año 2024?
 WITH CategoriaFrecuencias AS (
     SELECT 
         C.id_categoria,
-		C.Descripción,
-        COUNT(*) AS frecuencia
+                C.Descripción,
+        COUNT(*) AS pedidos
     FROM 
         grupo02.detalles_pedidos D
     JOIN 
@@ -36,17 +37,17 @@ WITH CategoriaFrecuencias AS (
         grupo02.pedidos PED ON D.id_pedido = PED.id_pedido
     GROUP BY 
         C.id_categoria,
-		C.descripción
+                C.descripción
 )
 
-SELECT 
+SELECT TOP 1
     id_categoria,
-	descripción,
-    frecuencia
+        descripción,
+    pedidos
 FROM 
     CategoriaFrecuencias
-WHERE 
-    frecuencia = (SELECT MIN(frecuencia) FROM CategoriaFrecuencias)						
+ORDER BY pedidos ASC
+				
 
 
 -- Pregunta 04: ¿Cuál es el tiempo máximo que ha demorado un pedido en ser entregado (de estado Pendiente 1 a estado Entregado 7) en el 2024?
@@ -80,21 +81,21 @@ TiemposEntrega AS (
         EstadoEntregado e ON p.id_pedido = e.id_pedido
 )
 
-SELECT 
+SELECT TOP 1
     id_pedido,
-    tiempo_segundos AS tiempo_maximo_segundos,
+    tiempo_segundos AS tiempo_segundos,
     tiempo_segundos / 86400 AS dias,
     (tiempo_segundos % 86400) / 3600 AS horas,
     ((tiempo_segundos % 86400) % 3600) / 60 AS minutos,
     ((tiempo_segundos % 86400) % 3600) % 60 AS segundos
 FROM 
     TiemposEntrega
-WHERE 
-    tiempo_segundos = (SELECT MAX(tiempo_segundos) FROM TiemposEntrega)
+ORDER BY tiempo_segundos DESC
+
 						
 
 --Pregunta 05: ¿Cuál ha sido el producto más caro pedido en el año 2024?
-SELECT TOP 1
+SELECT TOP 1 WITH TIES
 p.id_producto,
 p.nombre,
 p.precio,
@@ -102,7 +103,7 @@ SUM(dp.cantidad) AS Unidades_Vendidas
 FROM [grupo02].[productos] p
 INNER JOIN [grupo02].[detalles_pedidos] dp ON p.id_producto = dp.id_producto
 INNER JOIN [grupo02].[pedidos] pp ON dp.id_pedido = pp.id_pedido
-WHERE pp.fecha_hora BETWEEN '2024-01-01' AND '2024-12-31'
+WHERE YEAR(pp.fecha_hora) = 2024
 GROUP BY 
 p.id_producto,
 p.nombre,
@@ -116,7 +117,7 @@ SELECT COUNT(p.id_pedido) AS Pedidos_Entregados
 FROM [grupo02].[pedidos] p
 INNER JOIN [grupo02].[operaciones_estados] o ON p.id_pedido = o.id_pedido
 INNER JOIN [grupo02].[estados] e ON o.id_estado = e.id_estado
-WHERE e.descripción = 'Entregado' AND o.fecha_hora BETWEEN '2024-01-01' AND '2024-12-31'
+WHERE e.descripción = 'Entregado' AND YEAR(o.fecha_hora) = 2024
 
 
 --Pregunta 07: ¿Qué cuantos pedidos han sido cancelados en el año 2024? (estado Cancelado)
@@ -124,7 +125,7 @@ SELECT COUNT(p.id_pedido) AS Pedidos_Cancelados
 FROM [grupo02].[pedidos] p
 INNER JOIN [grupo02].[operaciones_estados] o ON p.id_pedido = o.id_pedido
 INNER JOIN [grupo02].[estados] e ON o.id_estado = e.id_estado
-WHERE e.descripción = 'Cancelado' AND o.fecha_hora BETWEEN '2024-01-01' AND '2024-12-31'					
+WHERE e.descripción = 'Cancelado' AND YEAR(o.fecha_hora) = 2024					
 
 
 --Pregunta 08: ¿Cuales son los 3 productos con menos unidades vendidas en 2024?
@@ -135,7 +136,7 @@ SUM(dp.cantidad) AS Unidades_Vendidas
 FROM [grupo02].[productos] p
 INNER JOIN [grupo02].[detalles_pedidos] dp ON p.id_producto = dp.id_producto
 INNER JOIN [grupo02].[pedidos] pp ON dp.id_pedido = pp.id_pedido
-WHERE pp.fecha_hora BETWEEN '2024-01-01' AND '2024-12-31'
+WHERE YEAR(pp.fecha_hora) = 2024		
 GROUP BY 
 p.id_producto,
 p.nombre
@@ -149,7 +150,7 @@ i.id_importacion,
 SUM(di.cantidad*di.precio_unitario) AS Monto_total
 FROM [grupo02].[importaciones] i
 INNER JOIN [grupo02].[detalles_importaciones] di ON i.id_importacion = di.id_importacion
-WHERE i.fecha_hora BETWEEN '2024-01-01' AND '2024-12-31'
+WHERE YEAR(i.fecha_hora) = 2024
 GROUP BY
 i.id_importacion
 ORDER BY
@@ -162,7 +163,7 @@ p.id_pedido,
 SUM(dp.cantidad*dp.precio_unitario) AS Monto_total
 FROM [grupo02].[pedidos] p
 INNER JOIN [grupo02].[detalles_pedidos] dp ON p.id_pedido = dp.id_pedido
-WHERE p.fecha_hora BETWEEN '2024-01-01' AND '2024-12-31'
+WHERE YEAR(p.fecha_hora) = 2024
 GROUP BY
 p.id_pedido
 ORDER BY
